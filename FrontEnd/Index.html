@@ -256,7 +256,7 @@
 
     <!-- 新增按鈕區 -->
     <div class="button-row">
-        <button class="btn btn-primary">新增訂單</button>
+        <button class="btn btn-primary" id="insert-btn">單筆新增</button>
         <button class="btn btn-primary">多筆匯入</button>
         <button class="btn btn-primary">查詢訂單</button>
         <button class="btn btn-danger"> 刪除訂單</button>
@@ -340,6 +340,67 @@
         const cancelModalButton = document.getElementById('cancelModalButton');
         //給跳出視窗的遮罩(不希望點選頁面中其他內容就關閉視窗的遮罩)
         const overlayForModal = document.getElementById('overlayForModal');
+        // 監測單筆新增按鈕
+        const insert = document.getElementById('insert-btn');
+
+        insert.addEventListener('click',()=> {
+            // 步驟 1: 創建訂單，並獲取訂單編號
+            fetch('http://localhost:8080/insertOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "barcode":"",
+                    "orderNO":"",
+                    "client":"小明",
+                    "recipient":"大華",
+                    "recipient_company":"台積電",
+                    "address":"台北市大安區安樂路147巷14樓",
+                    "phoneNO":"0974987789",
+                    "note":"要好吃",
+                    "latitude":"1.54684",
+                    "longitude":"4.7896",
+                    "state":0,
+                    "shippingDate":"",
+                    "insertionDate":"2024/11/26",
+                    "insertionStaff":"祐",
+                    "lastReviseDate":"",
+                    "lastReviseStaff":"",
+                    "deleteDate":"",
+                    "deleteStaff":"",
+                    "difficultBit":0
+
+                })
+            })
+            .then(response => response.json())  // 假設回應是JSON格式
+            .then(orderData => {
+                const orderId = orderData.orderNO;  // 從回應中獲取訂單編號
+                console.log(orderId);
+                // 步驟 2: 使用訂單編號新增品項
+                return fetch('http://localhost:8080/insertOrderItem', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        orderNO: orderId,  // 訂單編號
+                        items: [
+                            { item: "蘋果禮盒", amount: 2 },  // 品項和數量
+                            { item: "香蕉禮盒", amount: 3 }
+                        ]
+                    })
+                });
+            })
+            .then(response => response.json())  // 假設第二個請求回應是JSON格式
+            .then(data => {
+                console.log('品項已成功新增:', data);
+            })
+            .catch(error => {
+                console.error('處理請求時發生錯誤:', error);
+            });
+        });
+
 
         // 開啟選單
         menuButton.addEventListener('click', () => {

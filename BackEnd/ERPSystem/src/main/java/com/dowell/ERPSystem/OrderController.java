@@ -15,12 +15,12 @@ public class OrderController {
 	//僅接受post請求做新增訂單的動作	
 	//新增訂單資料表資料
 	@PostMapping("/insertOrder")
-	public String insertOrder(@RequestBody Order order) {
+	public Order insertOrder(@RequestBody Order order) {
 		return orderService.insert_Order(order);
 	}
 	//新增訂單品項資料表 資料
 	@PostMapping("/insertOrderItem")
-	public String insertOrderItem(@RequestBody OrderItem orderItem) {
+	public OrderItem insertOrderItem(@RequestBody OrderItem orderItem) {
 		return orderService.insert_OrderItem(orderItem);
 	}
 	

@@ -1,48 +1,95 @@
 package com.dowell.ERPSystem;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "order_data")
 public class Order {
 //	要記錄1.條碼(黑貓產生) 2.訂單編號(資料庫自動產生) 3.客戶名稱 4.收件人姓名 5.收件人公司
 //       6.配送地址 7.收件人電話  8.出貨備註 9.地址經度 10.地址緯度
 //       11.出貨狀態bit(-1:刪除  0:未出貨 1:已安排出貨 2:已出貨)
 //		 12.出貨日期 13.新增日期 14.新增人員 15.最後修改日期 16.最後修改人員
 //		 17.刪除日期 18.刪除人員 19.難送bit(0:不難送, 1:難送)
+		
+		@Column(name = "barcode")
 		//1.紀錄條碼
 		private String barcode;
+		
+		@Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 		//2.紀錄訂單編號
 		private Integer orderNO;
+		
+		@Column(name = "client",nullable = false)
 		//3.紀錄客戶名稱
 		private String client;
+		
+		@Column(name = "recipient")
 		//4.紀錄收件人姓名
 		private String recipient;
+		
+		@Column(name = "recipient_company")
 		//5.紀錄收件人公司
 		private String recipientCompany;
+		
+		@Column(name = "address")
 		//6.紀錄配送地址
 		private String address;
+		
+		@Column(name = "phone_no")
 		//7.收件人電話
 		private String phoneNO;
 
+		@Column(name = "note")
 		//8.出貨備註
 		private String  note;
-//		9.地址經度
+		
+		@Column(name = "latitude")
+//		9.地址緯度
 		private Float latitude;
-//		10.地址緯度
+		
+		@Column(name = "longitude")
+//		10.地址經度
 		private Float longitude;
+		
+		@Column(name = "state")
 //		11.出貨狀態bit(-1:刪除  0:未出貨 1:已安排出貨 2:已出貨)
 		private Integer state;
+		
+		@Column(name = "shipping_date")
 //		12.出貨日期(可為空)
 		private String shippingDate;
+		
+		@Column(name = "insertion_date")
 //		13.新增日期 (可為空)
 		private String insertionDate;
+		
+		@Column(name = "insertion_staff")
 //		14.新增人員 (可為空)
 		private String insertionStaff;
+		
+		@Column(name = "lastrevise_date")
 //		15.最後修改日期 (可為空)
 		private String lastReviseDate;
+		
+		@Column(name = "lastrevise_staff")
 //		16.最後修改人員 (可為空)
 		private String lastReviseStaff;
+		
+		@Column(name = "delete_date")
 //		 17.刪除日期 (可為空)
 		private String deleteDate;
+		
+		@Column(name = "delete_staff")
 //		18.刪除人員 (可為空)
 		private String deleteStaff;
+		
+		@Column(name = "difficult bit")
 //		19.難送bit(0:不難送, 1:難送)
 		private Integer difficultBit;
 		
@@ -113,14 +160,14 @@ public class Order {
 			return note;
 		}
 		
-		//9.地址經度
+		//9.地址緯度
 		public void setLatitude(Float latitude) {
 			this.latitude = latitude;
 		}
 		public Float get() {
 			return latitude;
 		}
-		//10.地址緯度		
+		//10.地址經度		
 		public void setLongitude(Float longitude) {
 			this.longitude = longitude;
 		}
