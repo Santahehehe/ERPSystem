@@ -1,5 +1,6 @@
 package com.dowell.ERPSystem;
 
+import org.springframework.stereotype.Component;
 
 @Component
 public class OrderDao {
