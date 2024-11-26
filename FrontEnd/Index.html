@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>都匯水果ERP系統</title>
+    <style>
+        /* 基本樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* Hover效果 */
+        .btn:hover {
+            background-color: #d3d3d3;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info {
+            margin-left: 20px;
+        }
+
+        /* 搜尋區 */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 20px;
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        #notification {
+            color: red;
+            font-weight: bold;
+            display: none;
+        }
+
+        /* 表格 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 20px;
+            pointer-events: none;
+            background-color: #f2f2f2;
+            opacity: 0.7;
+            transition: background-color 0.3s, opacity 0.3s;
+            cursor: not-allowed;
+        }
+
+        table.unlocked {
+            pointer-events: auto;
+            background-color: white;
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        /* 右側選單 */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #333;
+            color: white;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            z-index: 1002; /* 確保選單在最上層 */
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 0;
+            border-bottom: 1px solid #555;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar a:hover {
+            background-color: #555;
+        }
+
+        .sidebar .close-btn {
+            text-align: right;
+            font-size: 18px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        /* 給右側選單的遮罩 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1001; /* 確保遮罩不會覆蓋選單 */
+        }
+        /* 右側選單遮罩active時 */
+        .overlay.active {
+            display: block;
+        }
+
+
+/* 修改訂單的彈出視窗樣式 */
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1003;
+            /* modal跳出視窗一開始要是不顯示的狀態 */
+            display: none;
+            width: 300px;
+        }
+        /* 當視窗彈出時 */
+        .modal.active {
+            display: block;
+        }
+        /* 選擇所有屬於 .modal 元素內的 button 元素 */
+        /* 意味著它會應用樣式到 .modal 類別內的每個按鈕元素。 */
+        .modal button {
+            margin-top: 10px;
+        }
+        /* 針對在 .modal 內部的第一個按鈕進行樣式設置。 */
+        .modal button:first-child {
+            background-color: #28a745;
+            color: white;
+        }
+        /* 針對在 .modal 內部的最後一個按鈕進行樣式設置。 */
+        .modal button:last-child {
+            background-color: #dc3545;
+            color: white;
+        }
+/* 修改訂單的彈出視窗樣式 */
+
+        /* 固定右側選單展開按鈕位置 */
+        .fixed-buttons {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* 新增按鈕區 */
+        .button-row {
+            display: flex;
+            justify-content: flex-start;
+            margin: 20px 20px;
+            gap: 10px;
+        }
+        
+        /* 給跳出視窗的遮罩(不希望點選頁面中其他內容就關閉視窗的遮罩) */
+        .overlayForModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1001; /* 確保遮罩不會覆蓋選單 */
+        }
+        /* 給跳出視窗的遮罩啟動時(不希望點選頁面中其他內容就關閉視窗的遮罩) */
+        .overlayForModal.active {
+            display: block;
+        }
+        
+
+    </style>
+</head>
+<body>
+    <!-- 頁面頂部 Header -->
+    <header>
+        <div class="header-left">
+            <div>訂單管理系統</div>
+            <div class="user-info" id="userInfo">你好，xxx!</div>
+        </div>
+        <div class="fixed-buttons">
+            <button id="menuButton" class="btn btn-primary">☰</button>
+        </div>
+    </header>
+
+
+    <!-- 新增按鈕區 -->
+    <div class="button-row">
+        <button class="btn btn-primary">新增訂單</button>
+        <button class="btn btn-primary">多筆匯入</button>
+        <button class="btn btn-primary">查詢訂單</button>
+        <button class="btn btn-danger"> 刪除訂單</button>
+        <button class="btn btn-primary">匯出黑貓格式</button>
+    </div>
+
+    <!-- 搜尋區 -->
+    <div class="search-bar">
+        <div>
+            <input type="text" id="searchInput" placeholder="輸入查詢條件">
+            <button class="btn btn-primary" id="searchButton">搜尋</button>
+            <span id="notification">查無訂單</span>
+        </div>
+        <div class="search-actions">
+            <button class="btn btn-danger" id="editButton">解鎖訂單列表</button>
+            <button id="saveButton" class="btn btn-primary" disabled>鎖定訂單列表</button>
+        </div>
+    </div>
+    
+
+    <!-- 表格 -->
+    <table id="orderTable">
+        <thead>
+            <tr>
+                <th>訂單編號</th>
+                <th>客戶名稱</th>
+                <th>訂單日期</th>
+                <th>總金額</th>
+                <th>狀態</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>12345</td>
+                <td>王小明</td>
+                <td>2024-11-25</td>
+                <td>$5000</td>
+                <td>已完成</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- for右側選單的遮罩 -->
+    <div id="overlay" class="overlay"></div>
+    <!-- for跳出視窗的遮罩 -->
+    <div id="overlayForModal" class="overlayForModal"></div>
+
+    <!-- 右側選單 -->
+    <div id="sidebar" class="sidebar">
+        <div class="close-btn" id="closeSidebar">X</div>
+        <a href="#" id="loginLogoutButton">登出</a>
+        <a href="#">空白選項 1</a>
+        <a href="#">空白選項 2</a>
+        <a href="#">空白選項 3</a>
+    </div>
+
+    <!-- 彈出視窗 -->
+    <div id="modal" class="modal">
+        <p>是否保存更改?</p>
+        <button id="saveModalButton">保存</button>
+        <button id="cancelModalButton">取消</button>
+    </div>
+
+    <script>
+        // 選取元素
+        const menuButton = document.getElementById('menuButton');
+        const sidebar = document.getElementById('sidebar');
+        const closeSidebar = document.getElementById('closeSidebar');
+        //給右側選單的遮罩，當點選到遮罩內容時，右側選單回復收起狀態
+        const overlay = document.getElementById('overlay');
+        const loginLogoutButton = document.getElementById('loginLogoutButton');
+        const userInfo = document.getElementById('userInfo');
+        const searchButton = document.getElementById('searchButton');
+        const searchInput = document.getElementById('searchInput');
+        const notification = document.getElementById('notification');
+        const orderTable = document.getElementById('orderTable');
+        const editButton = document.getElementById('editButton');
+        const saveButton = document.getElementById('saveButton');
+        const modal = document.getElementById('modal');
+        const saveModalButton = document.getElementById('saveModalButton');
+        const cancelModalButton = document.getElementById('cancelModalButton');
+        //給跳出視窗的遮罩(不希望點選頁面中其他內容就關閉視窗的遮罩)
+        const overlayForModal = document.getElementById('overlayForModal');
+
+        // 開啟選單
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        // 關閉選單（按 X 或點擊遮罩）
+        closeSidebar.addEventListener('click', closeSidebarMenu);
+        overlay.addEventListener('click', closeSidebarMenu);
+
+        function closeSidebarMenu() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // 登入登出切換
+        loginLogoutButton.addEventListener('click', () => {
+            let isLoggedIn = loginLogoutButton.textContent === "登出";
+            if (isLoggedIn) {
+                userInfo.textContent = "請先登入";
+                loginLogoutButton.textContent = "登入";
+            } else {
+                userInfo.textContent = "你好，xxx!";
+                loginLogoutButton.textContent = "登出";
+            }
+        });
+
+        // 搜尋邏輯
+        searchButton.addEventListener('click', () => {
+            const searchInputValue = searchInput.value;
+            if (searchInputValue) {
+                // 用javaScript直接去操作css的屬性
+                // 通知欄位為隱藏狀態
+                notification.style.display = 'none';
+                // 表格變成解鎖狀態
+                orderTable.classList.add('unlocked'); 
+            } else {
+                // 通知欄位為出現狀態
+                notification.style.display = 'block';
+                // 設定 3 秒後隱藏通知
+                setTimeout(function() {
+                    notification.style.display = 'none';  // 3秒後隱藏
+                }, 3000);  // 1000 毫秒 = 1 秒
+                // 表格解除鎖定狀態
+                orderTable.classList.remove('unlocked'); 
+            }
+        });
+
+        // 修改訂單按鈕
+        editButton.addEventListener('click', () => {
+            orderTable.classList.add('unlocked'); // 解鎖表格
+            saveButton.disabled = false; // 啟用保存按鈕
+        });
+
+        // 保存按鈕
+        saveButton.addEventListener('click', () => {
+            orderTable.classList.remove('unlocked'); // 鎖定表格
+            saveButton.disabled = true; // 禁用保存按鈕
+        });
+
+        // 讓表格變為可點選的狀態，顯示小手
+        orderTable.addEventListener('mouseover', () => {
+            if (orderTable.classList.contains('unlocked')) {
+                orderTable.style.cursor = 'pointer'; // 變成小手
+            }
+        });
+
+        // 點擊表格時顯示彈出視窗
+        orderTable.addEventListener('click', (event) => {
+            if (orderTable.classList.contains('unlocked') && event.target.tagName === 'TD') {
+                modal.classList.add('active');
+                overlayForModal.classList.add('active'); // 禁用其他頁面內容
+            }
+        });
+
+        // 保存彈出視窗
+        saveModalButton.addEventListener('click', () => {
+            orderTable.classList.remove('unlocked'); // 鎖定表格
+            saveButton.disabled = true; // 禁用保存按鈕
+            modal.classList.remove('active');
+            overlayForModal.classList.remove('active');//啟動跳出視窗遮罩(不希望點選頁面中其他內容就關閉視窗的遮罩)
+        });
+
+        
+
+        // 取消彈出視窗
+        cancelModalButton.addEventListener('click', () => {
+            modal.classList.remove('active');
+            overlayForModal.classList.remove('active');//取消跳出視窗遮罩
+        });
+    </script>
+</body>
+</html>
