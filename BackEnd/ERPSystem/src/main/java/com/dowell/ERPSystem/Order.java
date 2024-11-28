@@ -2,16 +2,24 @@ package com.dowell.ERPSystem;
 //import來使用@CreatedDate
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.time.LocalDateTime;
+import java.util.Set;
+
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.CascadeType;
 //
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @EntityListeners(AuditingEntityListener.class)
 @Data
@@ -73,7 +81,7 @@ public class Order {
 //		12.出貨日期(可為空)
 		private String shippingDate;
 		
-		//@CreatedDate是lombok提供的註解
+		//@CreatedDate是JPA提供的註解
 		@CreatedDate
 		@Column(name = "insertion_date",nullable = false)
 //		13.新增日期 (不可為空)
@@ -103,7 +111,11 @@ public class Order {
 //		19.難送bit(0:不難送, 1:難送)
 		private Integer difficultBit;
 		
-		
+		//關聯至OrderItem		
+		@JsonManagedReference
+	    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+	    @EqualsAndHashCode.Exclude
+	    private Set<OrderItem> orderItems;
 		
 		
 //		//1.設定和取得barcode變數function

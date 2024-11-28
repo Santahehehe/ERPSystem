@@ -1,10 +1,15 @@
 package com.dowell.ERPSystem;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -21,8 +26,19 @@ public class OrderItem {
 	
 	
 	//紀錄是哪筆訂單	
-	@Column(name = "order_no")
-	private Integer orderNO;
+	//關聯主控方(多的一方:學生記老師名字較容易)，關聯方式為ALL
+	@ManyToOne(cascade = CascadeType.ALL)
+	//跟Order的關係是要找Order物件中的order_no欄位
+	//對應到自己這個資料表(order_item)name是order_no的欄位	
+	@JoinColumn(name="order_no", referencedColumnName="orderNO")
+	//@JsonManagedReference與@JsonBackReference為了解決物件中存在雙向引用導致的無限遞迴問題，
+	//在處理數據之間的雙向鏈接，一個用於父級角色，另一個用於子級角色。
+	//＠JsonManagedReference被序列化的數據，而@JsonBackReference標註，不會被序列化。
+	@JsonBackReference
+	//因為是要跟Order物件關聯，所以這邊宣告一個Order物件(來取他的order_no)
+	private Order order;
+	
+	
 	//紀錄該筆訂單的品項
 	@Column(name = "order_item")
 	private String item;

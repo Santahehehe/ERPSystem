@@ -363,7 +363,7 @@
                     "longitude":"4.7896",
                     "state":0,
                     "shippingDate":"",
-                    "insertionDate":"2024/11/26",
+                    "insertionDate":null,
                     "insertionStaff":"祐",
                     "lastReviseDate":"",
                     "lastReviseStaff":"",
@@ -384,7 +384,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        orderNO: orderId,  // 訂單編號
+                        order: orderId,  // 訂單編號
                         items: [
                             { item: "蘋果禮盒", amount: 2 },  // 品項和數量
                             { item: "香蕉禮盒", amount: 3 }
