@@ -168,7 +168,7 @@
 
 
 /* 修改訂單的彈出視窗樣式 */
-        .modal {
+        .reviseModal {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -183,21 +183,21 @@
             width: 300px;
         }
         /* 當視窗彈出時 */
-        .modal.active {
+        .reviseModal.active {
             display: block;
         }
         /* 選擇所有屬於 .modal 元素內的 button 元素 */
         /* 意味著它會應用樣式到 .modal 類別內的每個按鈕元素。 */
-        .modal button {
+        .reviseModal button {
             margin-top: 10px;
         }
         /* 針對在 .modal 內部的第一個按鈕進行樣式設置。 */
-        .modal button:first-child {
+        .reviseModal button:first-child {
             background-color: #28a745;
             color: white;
         }
         /* 針對在 .modal 內部的最後一個按鈕進行樣式設置。 */
-        .modal button:last-child {
+        .reviseModal button:last-child {
             background-color: #dc3545;
             color: white;
         }
@@ -313,8 +313,8 @@
         <a href="#">空白選項 3</a>
     </div>
 
-    <!-- 彈出視窗 -->
-    <div id="modal" class="modal">
+    <!-- 修改訂單彈出視窗 -->
+    <div id="reviseModal" class="reviseModal">
         <p>是否保存更改?</p>
         <button id="saveModalButton">保存</button>
         <button id="cancelModalButton">取消</button>
@@ -335,7 +335,8 @@
         const orderTable = document.getElementById('orderTable');
         const editButton = document.getElementById('editButton');
         const saveButton = document.getElementById('saveButton');
-        const modal = document.getElementById('modal');
+        //修改訂單的視窗
+        const reviseModal = document.getElementById('reviseModal');
         const saveModalButton = document.getElementById('saveModalButton');
         const cancelModalButton = document.getElementById('cancelModalButton');
         //給跳出視窗的遮罩(不希望點選頁面中其他內容就關閉視窗的遮罩)
@@ -344,71 +345,73 @@
         const insert = document.getElementById('insert-btn');
 
         insert.addEventListener('click',()=> {
-            // 步驟 1: 創建訂單，並獲取訂單編號
-            fetch('http://localhost:8080/insertOrder', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "barcode":"",
-                    "orderNO":"",
-                    "client":"小明",
-                    "recipient":"大華",
-                    "recipientCompany":"台積電",
-                    "address":"台北市大安區安樂路147巷14樓",
-                    "phoneNO":"0974987789",
-                    "note":"要好吃",
-                    "latitude":"1.54684",
-                    "longitude":"4.7896",
-                    "state":0,
-                    "shippingDate":"",
-                    "insertionDate":null,
-                    "insertionStaff":"祐",
-                    "lastReviseDate":"",
-                    "lastReviseStaff":"",
-                    "deleteDate":"",
-                    "deleteStaff":"",
-                    "difficultBit":0,
-                    "orderItems":[
-  	                    {
-  		                    "item":"蘋果禮盒",
-  		                    "amount":4
-	                    },
-	                    {
-  		                    "item":"香蕉禮盒",
-  		                    "amount":5
-	                    },
-                        {
-  		                    "item":"芭樂禮盒",
-  		                    "amount":31
-	                    },
-                        {
-  		                    "item":"鳳梨禮盒",
-  		                    "amount":47
-	                    },
-                        {
-  		                    "item":"西瓜禮盒",
-  		                    "amount":12
-	                    },
-                        {
-  		                    "item":"流連禮盒",
-  		                    "amount":66
-	                    },
-                        {
-  		                    "item":"藍莓禮盒",
-  		                    "amount":57
-	                    },
-                    ]
-                })
-            })
-            .then(response => response.json())  // 假設回應是JSON格式
-            .then(data => {
-                console.log('訂單已成功新增:', data);
-            })
-            .catch(error => {
-                console.error('處理請求時發生錯誤:', error);
-            });
+            // 測資
+            // // 步驟 1: 創建訂單，並獲取訂單編號
+            // fetch('http://localhost:8080/insertOrder', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({
+            //         "barcode":"",
+            //         "orderNO":"",
+            //         "client":"小明",
+            //         "recipient":"大華",
+            //         "recipientCompany":"台積電",
+            //         "address":"台北市大安區安樂路147巷14樓",
+            //         "phoneNO":"0974987789",
+            //         "note":"要好吃",
+            //         "latitude":"1.54684",
+            //         "longitude":"4.7896",
+            //         "state":0,
+            //         "shippingDate":"",
+            //         "insertionDate":null,
+            //         "insertionStaff":"祐",
+            //         "lastReviseDate":"",
+            //         "lastReviseStaff":"",
+            //         "deleteDate":"",
+            //         "deleteStaff":"",
+            //         "difficultBit":0,
+            //         "orderItems":[
+  	        //             {
+  		    //                 "item":"蘋果禮盒",
+  		    //                 "amount":4
+	        //             },
+	        //             {
+  		    //                 "item":"香蕉禮盒",
+  		    //                 "amount":5
+	        //             },
+            //             {
+  		    //                 "item":"芭樂禮盒",
+  		    //                 "amount":31
+	        //             },
+            //             {
+  		    //                 "item":"鳳梨禮盒",
+  		    //                 "amount":47
+	        //             },
+            //             {
+  		    //                 "item":"西瓜禮盒",
+  		    //                 "amount":12
+	        //             },
+            //             {
+  		    //                 "item":"流連禮盒",
+  		    //                 "amount":66
+	        //             },
+            //             {
+  		    //                 "item":"藍莓禮盒",
+  		    //                 "amount":57
+	        //             },
+            //         ]
+            //     })
+            // })
+            // .then(response => response.json())  // 假設回應是JSON格式
+            // .then(data => {
+            //     console.log('訂單已成功新增:', data);
+            // })
+            // .catch(error => {
+            //     console.error('處理請求時發生錯誤:', error);
+            // });
+
         });
 
 
@@ -460,18 +463,17 @@
             }
         });
 
-        // 修改訂單按鈕
+        // 訂單列表的操作
+        // 解鎖訂單列表按鈕
         editButton.addEventListener('click', () => {
             orderTable.classList.add('unlocked'); // 解鎖表格
             saveButton.disabled = false; // 啟用保存按鈕
         });
-
-        // 保存按鈕
+        // 鎖定訂單列表按鈕
         saveButton.addEventListener('click', () => {
             orderTable.classList.remove('unlocked'); // 鎖定表格
             saveButton.disabled = true; // 禁用保存按鈕
         });
-
         // 讓表格變為可點選的狀態，顯示小手
         orderTable.addEventListener('mouseover', () => {
             if (orderTable.classList.contains('unlocked')) {
@@ -479,29 +481,28 @@
             }
         });
 
-        // 點擊表格時顯示彈出視窗
+
+        //操作修改訂單彈出視窗
+        // 點擊表格時顯示修改訂單彈出視窗
         orderTable.addEventListener('click', (event) => {
             if (orderTable.classList.contains('unlocked') && event.target.tagName === 'TD') {
-                modal.classList.add('active');
+                reviseModal.classList.add('active');
                 overlayForModal.classList.add('active'); // 禁用其他頁面內容
             }
         });
-
-        // 保存彈出視窗
+        // 保存修改訂單彈出視窗
         saveModalButton.addEventListener('click', () => {
             orderTable.classList.remove('unlocked'); // 鎖定表格
             saveButton.disabled = true; // 禁用保存按鈕
-            modal.classList.remove('active');
+            reviseModal.classList.remove('active');
             overlayForModal.classList.remove('active');//啟動跳出視窗遮罩(不希望點選頁面中其他內容就關閉視窗的遮罩)
         });
-
-        
-
-        // 取消彈出視窗
+        // 取消修改訂單彈出視窗
         cancelModalButton.addEventListener('click', () => {
-            modal.classList.remove('active');
+            reviseModal.classList.remove('active');
             overlayForModal.classList.remove('active');//取消跳出視窗遮罩
         });
+
     </script>
 </body>
 </html>
