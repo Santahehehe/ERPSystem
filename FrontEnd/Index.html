@@ -202,6 +202,41 @@
             color: white;
         }
 /* 修改訂單的彈出視窗樣式 */
+/* <<單筆新增彈出視窗>>樣式 */
+        .insertOneModal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1003;
+            /* modal跳出視窗一開始要是不顯示的狀態 */
+            display: none;
+            width: 300px;
+        }
+        /* 當視窗彈出時 */
+        .insertOneModal.active {
+            display: block;
+        }
+        /* 選擇所有屬於 .modal 元素內的 button 元素 */
+        /* 意味著它會應用樣式到 .modal 類別內的每個按鈕元素。 */
+        .insertOneModal button {
+            margin-top: 10px;
+        }
+        /* 針對在 .modal 內部的第一個按鈕進行樣式設置。 */
+        .insertOneModal button:first-child {
+            background-color: #28a745;
+            color: white;
+        }
+        /* 針對在 .modal 內部的最後一個按鈕進行樣式設置。 */
+        .insertOneModal button:last-child {
+            background-color: #dc3545;
+            color: white;
+        }
+/* <<單筆新增彈出視窗>>樣式 */
 
         /* 固定右側選單展開按鈕位置 */
         .fixed-buttons {
@@ -320,6 +355,13 @@
         <button id="cancelModalButton">取消</button>
     </div>
 
+    <!-- 單筆新增彈出視窗 -->
+    <div id="insertOneModal" class="insertOneModal">
+        <p>是否保存更改?</p>
+        <button id="insertOneSaveModalButton">保存</button>
+        <button id="insertOneCancelModalButton">取消</button>
+    </div>
+
     <script>
         // 選取元素
         const menuButton = document.getElementById('menuButton');
@@ -341,10 +383,17 @@
         const cancelModalButton = document.getElementById('cancelModalButton');
         //給跳出視窗的遮罩(不希望點選頁面中其他內容就關閉視窗的遮罩)
         const overlayForModal = document.getElementById('overlayForModal');
-        // 監測單筆新增按鈕
-        const insert = document.getElementById('insert-btn');
+        // 監測<<單筆新增按鈕>>
+        const insertOne = document.getElementById('insert-btn');
+        //監聽<<單筆新增彈出視窗>>的元素
+        const insertOneModal = document.getElementById('insertOneModal');
+        const insertOneSaveModalButton = document.getElementById('insertOneSaveModalButton');
+        const insertOneCancelModalButton = document.getElementById('insertOneCancelModalButton');
 
-        insert.addEventListener('click',()=> {
+        //單筆新增操作
+        //點擊單筆新增按鈕時跳出 <單筆新增彈出視窗>
+        insertOne.addEventListener('click',()=> {
+            insertOneModal.classList.add('active');//跳出 <<修改訂單彈出視窗>>
             // 測資
             // // 步驟 1: 創建訂單，並獲取訂單編號
             // fetch('http://localhost:8080/insertOrder', {
@@ -481,12 +530,11 @@
             }
         });
 
-
         //操作修改訂單彈出視窗
         // 點擊表格時顯示修改訂單彈出視窗
         orderTable.addEventListener('click', (event) => {
             if (orderTable.classList.contains('unlocked') && event.target.tagName === 'TD') {
-                reviseModal.classList.add('active');
+                reviseModal.classList.add('active');//跳出 <<修改訂單彈出視窗>>
                 overlayForModal.classList.add('active'); // 禁用其他頁面內容
             }
         });
