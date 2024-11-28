@@ -1,7 +1,10 @@
 package com.dowell.ERPSystem;
-
+//import來使用@CreatedDate
 import org.springframework.data.annotation.CreatedDate;
-
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.time.LocalDateTime;
+import jakarta.persistence.EntityListeners;
+//
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-
+@EntityListeners(AuditingEntityListener.class)
 @Data
 @Entity
 @Table(name = "order_data")
@@ -70,10 +73,11 @@ public class Order {
 //		12.出貨日期(可為空)
 		private String shippingDate;
 		
-		
+		//@CreatedDate是lombok提供的註解
+		@CreatedDate
 		@Column(name = "insertion_date",nullable = false)
 //		13.新增日期 (不可為空)
-		private String insertionDate;
+		private LocalDateTime insertionDate;
 		
 		@Column(name = "insertion_staff",nullable = false)
 //		14.新增人員 (不可為空)
