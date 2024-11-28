@@ -24,8 +24,32 @@ public class OrderController {
 //		return orderService.insert_OrderItem(orderItem);
 //	}
 	@PostMapping("/insertOrder")
-	public Order insertOrder(@RequestBody Order order) {
-		Order neworder = new Order();
+	public Order insertOrder(@RequestBody OrderRequest orderrequest) {
+		Order order = new Order();
+		order.setBarcode(orderrequest.getBarcode());
+		order.setOrderNO(orderrequest.getOrderNO());
+		order.setClient(orderrequest.getClient());
+		order.setRecipient(orderrequest.getRecipient());
+		order.setRecipientCompany(orderrequest.getRecipientCompany());
+		order.setAddress(orderrequest.getAddress());
+		order.setPhoneNO(orderrequest.getPhoneNO());
+		order.setNote(orderrequest.getNote());
+		order.setLatitude(orderrequest.getLatitude());
+		order.setLongitude(orderrequest.getLongitude());
+		order.setState(orderrequest.getState());
+		order.setShippingDate(orderrequest.getShippingDate());
+		order.setInsertionStaff(orderrequest.getInsertionStaff());
+		order.setDifficultBit(orderrequest.getDifficultBit());
+				
+		for(OrderItemRequest orderItemRequest : orderrequest.getOrderItems()) {
+			OrderItem orderItem = new OrderItem();
+			orderItem.setItem(orderItemRequest.getItem());
+			orderItem.setAmount(orderItemRequest.getAmount());
+			
+			order.addItem(orderItem);
+		}
+		
+		return orderService.insert_Order(order);
 		
 	}
 	

@@ -6,7 +6,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.CascadeType;
@@ -20,6 +19,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import java.util.List;
+import java.util.ArrayList;
+
 
 @EntityListeners(AuditingEntityListener.class)
 @Data
@@ -115,8 +117,16 @@ public class Order {
 		@JsonManagedReference
 	    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
 	    @EqualsAndHashCode.Exclude
-	    private Set<OrderItem> orderItems;
+	    private List<OrderItem> orderItems = new ArrayList<>();
 		
+		public void addItem(OrderItem item) {
+			orderItems.add(item);
+			item.setOrder(this);
+		}
+		public void removeItem(OrderItem item) {
+			orderItems.remove(item);
+			item.setOrder(null);
+		}
 		
 //		//1.設定和取得barcode變數function
 //		public void setBarcode(String barcode) {

@@ -355,7 +355,7 @@
                     "orderNO":"",
                     "client":"小明",
                     "recipient":"大華",
-                    "recipient_company":"台積電",
+                    "recipientCompany":"台積電",
                     "address":"台北市大安區安樂路147巷14樓",
                     "phoneNO":"0974987789",
                     "note":"要好吃",
@@ -369,32 +369,42 @@
                     "lastReviseStaff":"",
                     "deleteDate":"",
                     "deleteStaff":"",
-                    "difficultBit":0
-
+                    "difficultBit":0,
+                    "orderItems":[
+  	                    {
+  		                    "item":"蘋果禮盒",
+  		                    "amount":4
+	                    },
+	                    {
+  		                    "item":"香蕉禮盒",
+  		                    "amount":5
+	                    },
+                        {
+  		                    "item":"芭樂禮盒",
+  		                    "amount":31
+	                    },
+                        {
+  		                    "item":"鳳梨禮盒",
+  		                    "amount":47
+	                    },
+                        {
+  		                    "item":"西瓜禮盒",
+  		                    "amount":12
+	                    },
+                        {
+  		                    "item":"流連禮盒",
+  		                    "amount":66
+	                    },
+                        {
+  		                    "item":"藍莓禮盒",
+  		                    "amount":57
+	                    },
+                    ]
                 })
             })
             .then(response => response.json())  // 假設回應是JSON格式
-            .then(orderData => {
-                const orderId = orderData.orderNO;  // 從回應中獲取訂單編號
-                console.log(orderId);
-                // 步驟 2: 使用訂單編號新增品項
-                return fetch('http://localhost:8080/insertOrderItem', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        order: orderId,  // 訂單編號
-                        items: [
-                            { item: "蘋果禮盒", amount: 2 },  // 品項和數量
-                            { item: "香蕉禮盒", amount: 3 }
-                        ]
-                    })
-                });
-            })
-            .then(response => response.json())  // 假設第二個請求回應是JSON格式
             .then(data => {
-                console.log('品項已成功新增:', data);
+                console.log('訂單已成功新增:', data);
             })
             .catch(error => {
                 console.error('處理請求時發生錯誤:', error);
