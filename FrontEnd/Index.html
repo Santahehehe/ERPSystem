@@ -295,7 +295,7 @@ th {
 .item-row select, .item-row input {
     flex: 1; /* 讓子元素自動調整寬度 */
     max-width: 200px; /* 設置最大寬度，避免太寬 */
-}
+}  
 /* <<單筆新增彈出視窗>>樣式 */
 
 
@@ -460,7 +460,7 @@ th {
                     <label>*數量：</label>
                     <input type="number" min="1" required name="quantity[]">
                 </div>
-                <!-- 用來裝動態生成的品項 -->
+                <!-- 用來裝動態生成的品項(生成的class 還有name都跟上面的一樣) -->
                 <div class="insertOneForm-group" id="insertOneItems-container"></div>
                 <!-- 新增品項按鈕 -->
                 <button type="button" id="addItemBtn">新增品項</button>
@@ -584,9 +584,18 @@ th {
         });
         // <<單筆新增彈出視窗>><<保存按鈕>>
         insertOneSaveModalButton.addEventListener('click', () => {
-            insertOneItemsContainer.textContent="";
-            insertOneModal.classList.remove('active');//關閉<<單筆新增彈出視窗>>
-            overlayForModal.classList.remove('active');//取消<<跳出視窗遮罩>>(不希望點選頁面中其他內容就關閉視窗的遮罩)
+            // 驗證表單是否有效(重點在用了form.checkValidity():會檢查required欄位是否有正確填寫)
+            if (form.checkValidity()) {
+                alert("表單驗證成功！提交資料...");
+                
+                // 在表單驗證成功後關閉視窗
+                insertOneItemsContainer.textContent="";
+                insertOneModal.classList.remove('active');//關閉<<單筆新增彈出視窗>>
+                overlayForModal.classList.remove('active');//取消<<跳出視窗遮罩>>(不希望點選頁面中其他內容就關閉視窗的遮罩)
+            } else {
+                // 如果表單無效，顯示錯誤訊息
+                alert("請填寫所有必填欄位！");
+            }
         });
         // <<單筆新增彈出視窗>><<取消按鈕>>
         insertOneCancelModalButton.addEventListener('click', () => {
