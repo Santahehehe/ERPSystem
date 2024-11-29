@@ -418,12 +418,12 @@ th {
 
     <!-- 單筆新增彈出視窗 -->
     <div id="insertOneModal" class="insertOneModal">
-        <div class="insertOneModal-content">
+        <div class="insertOneModal-content" id="insertOneModal-content">
             <div class="close-btn" id="closeInsertOneModal">X</div>
-            <form>
+            <form id="insertOneOrderForm">
                 <div class="insertOneForm-group">
                     <label>*客戶名稱：</label>
-                    <select required>
+                    <select required id="insertOneCustomer">
                         <option value="" disabled selected>請選擇</option>
                         <option value="customer1">客戶 1</option>
                         <option value="customer2">客戶 2</option>
@@ -431,42 +431,42 @@ th {
                 </div>
                 <div class="insertOneForm-group">
                     <label>*收件人姓名+稱謂：</label>
-                    <input type="text" required>
+                    <input type="text" required id="insertOneRecipient">
                 </div>
                 <div class="insertOneForm-group">
                     <label>*配送地址：</label>
-                    <input type="text" required>
+                    <input type="text" required id="insertOneAddress">
                 </div>
                 <div class="insertOneForm-group">
                     <label>收件人公司：</label>
-                    <input type="text">
+                    <input type="text" id="insertOneRecipientCompany">
                 </div>
                 <div class="insertOneForm-group">
                     <label>收件人電話：</label>
-                    <input type="text">
+                    <input type="text" id="insertOnePhoneNO">
                 </div>
                 <div class="insertOneForm-group">
                     <label>出貨備註：</label>
-                    <textarea></textarea>
+                    <textarea id="insertOneNote"></textarea>
                 </div>
                 <!-- 畫面中本來就有的那個品項 -->
                 <div class="item-row">
                     <label>*品項：</label>
-                    <select required name="item[]">
+                    <select required name="item[]" id="insertOneItem">
                         <option value="" disabled selected>請選擇</option>
                         <option value="item1">品項 1</option>
                         <option value="item2">品項 2</option>
                     </select>
                     <label>*數量：</label>
-                    <input type="number" min="1" required name="quantity[]">
+                    <input type="number" min="1" required name="quantity[]" id="insertOneAmount">
                 </div>
                 <!-- 用來裝動態生成的品項(生成的class 還有name都跟上面的一樣) -->
                 <div class="insertOneForm-group" id="insertOneItems-container"></div>
                 <!-- 新增品項按鈕 -->
                 <button type="button" id="addItemBtn">新增品項</button>
                 <div class="insertOneForm-actions">
-                    <button id="insertOneSaveModalButton">提交</button>
-                    <button id="insertOneCancelModalButton">取消</button>
+                    <button type="submit" id="insertOneSaveModalButton">提交</button>
+                    <button type="button" id="insertOneCancelModalButton">取消</button>
                 </div>
             </form>
         </div>
@@ -508,95 +508,127 @@ th {
         const insertOneItemsContainer = document.getElementById('insertOneItems-container');
             //<<單筆新增彈出視窗>><<新增品項按鈕>>
         const addItemBtn = document.getElementById('addItemBtn');
+            // <<單筆新增彈出視窗>><<表單中所有的欄位>>
+        const insertOneOrderForm = document.getElementById('insertOneOrderForm');
+            //<<單筆新增彈出視窗>><<表單中客戶名稱欄位>>
+        const insertOneCustomer = document.getElementById('insertOneCustomer');
+            //收件人欄位 
+        const insertOneRecipient = document.getElementById('insertOneRecipient');
+            // 配送地址欄位
+        const insertOneAddress = document.getElementById('insertOneAddress');
+            //收件人公司欄位
+        const insertOneRecipientCompany = document.getElementById('insertOneRecipientCompany');
+            // 收件人電話
+        const insertOnePhoneNO = document.getElementById('insertOnePhoneNO');
+            // 出貨備註
+        const insertOneNote = document.getElementById('insertOneNote');
+            //預設的品項
+        const insertOneItem = document.getElementById('insertOneItem');
+            //預設的數量
+        const insertOneAmount = document.getElementById('insertOneAmount');
 
         //單筆新增操作
         //點擊單筆新增按鈕時跳出 <單筆新增彈出視窗>
         insertOne.addEventListener('click', () =>{
             insertOneModal.classList.add('active');//跳出 <<修改訂單彈出視窗>>
             overlayForModal.classList.add('active'); // 禁用其他頁面內容
-            // 測資
-            // // 步驟 1: 創建訂單，並獲取訂單編號
-            // fetch('http://localhost:8080/insertOrder', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({
-            //         "barcode":"",
-            //         "orderNO":"",
-            //         "client":"小明",
-            //         "recipient":"大華",
-            //         "recipientCompany":"台積電",
-            //         "address":"台北市大安區安樂路147巷14樓",
-            //         "phoneNO":"0974987789",
-            //         "note":"要好吃",
-            //         "latitude":"1.54684",
-            //         "longitude":"4.7896",
-            //         "state":0,
-            //         "shippingDate":"",
-            //         "insertionDate":null,
-            //         "insertionStaff":"祐",
-            //         "lastReviseDate":"",
-            //         "lastReviseStaff":"",
-            //         "deleteDate":"",
-            //         "deleteStaff":"",
-            //         "difficultBit":0,
-            //         "orderItems":[
-  	        //             {
-  		    //                 "item":"蘋果禮盒",
-  		    //                 "amount":4
-	        //             },
-	        //             {
-  		    //                 "item":"香蕉禮盒",
-  		    //                 "amount":5
-	        //             },
-            //             {
-  		    //                 "item":"芭樂禮盒",
-  		    //                 "amount":31
-	        //             },
-            //             {
-  		    //                 "item":"鳳梨禮盒",
-  		    //                 "amount":47
-	        //             },
-            //             {
-  		    //                 "item":"西瓜禮盒",
-  		    //                 "amount":12
-	        //             },
-            //             {
-  		    //                 "item":"流連禮盒",
-  		    //                 "amount":66
-	        //             },
-            //             {
-  		    //                 "item":"藍莓禮盒",
-  		    //                 "amount":57
-	        //             },
-            //         ]
-            //     })
-            // })
-            // .then(response => response.json())  // 假設回應是JSON格式
-            // .then(data => {
-            //     console.log('訂單已成功新增:', data);
-            // })
-            // .catch(error => {
-            //     console.error('處理請求時發生錯誤:', error);
-            // });
-
         });
-        // <<單筆新增彈出視窗>><<保存按鈕>>
-        insertOneSaveModalButton.addEventListener('click', () => {
+        // <<單筆新增彈出視窗>><<保存按鈕>>操作
+        insertOneOrderForm.onsubmit=function(event){
+            event.preventDefault(); // 防止表單默認提交行為
             // 驗證表單是否有效(重點在用了form.checkValidity():會檢查required欄位是否有正確填寫)
-            if (form.checkValidity()) {
+            if (insertOneOrderForm.checkValidity()) {
                 alert("表單驗證成功！提交資料...");
-                
-                // 在表單驗證成功後關閉視窗
-                insertOneItemsContainer.textContent="";
-                insertOneModal.classList.remove('active');//關閉<<單筆新增彈出視窗>>
-                overlayForModal.classList.remove('active');//取消<<跳出視窗遮罩>>(不希望點選頁面中其他內容就關閉視窗的遮罩)
+                //表單通過驗證，用post方法去後端新增一筆訂單
+                fetch('http://localhost:8080/insertOrder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "barcode":"",
+                        "orderNO":"",
+                        "client":"小明",
+                        "recipient":"大華",
+                        "recipientCompany":"台積電",
+                        "address":"台北市大安區安樂路147巷14樓",
+                        "phoneNO":"0974987789",
+                        "note":"要好吃",
+                        "latitude":"1.54684",
+                        "longitude":"4.7896",
+                        "state":0,
+                        "shippingDate":"",
+                        "insertionDate":null,
+                        "insertionStaff":"祐",
+                        "lastReviseDate":"",
+                        "lastReviseStaff":"",
+                        "deleteDate":"",
+                        "deleteStaff":"",
+                        "difficultBit":0,
+                        "orderItems":[
+  	                        {
+  		                        "item":"蘋果禮盒",
+  		                        "amount":4
+	                        },
+	                        {
+  		                        "item":"香蕉禮盒",
+  		                        "amount":5
+	                        },
+                            {
+  		                        "item":"芭樂禮盒",
+  		                        "amount":31
+	                        },
+                            {
+  		                        "item":"鳳梨禮盒",
+  		                        "amount":47
+	                        },
+                            {
+  		                        "item":"西瓜禮盒",
+  		                        "amount":12
+	                        },
+                            {
+  		                        "item":"流連禮盒",
+  		                        "amount":66
+	                        },
+                            {
+  		                        "item":"藍莓禮盒",
+  		                        "amount":57
+	                        },
+                        ]
+                    })
+                })
+                .then(response => response.json())  // 假設回應是JSON格式
+                .then(data => {
+                    console.log('訂單已成功新增:', data);
+                    // 在訂單新增成功後關閉視窗
+                    //1.刪除動態生成的欄位 2.清空視窗欄位中內容 3.關閉視窗&遮罩
+                    //1.
+                    insertOneItemsContainer.textContent="";
+                    //2.
+                    cleanInsertOneModalContent();
+                    //3.
+                    insertOneModal.classList.remove('active');//關閉<<單筆新增彈出視窗>>
+                    overlayForModal.classList.remove('active');//取消<<跳出視窗遮罩>>(不希望點選頁面中其他內容就關閉視窗的遮罩)
+                })
+                .catch(error => {
+                    console.error('處理請求時發生錯誤:', error);
+                });
             } else {
                 // 如果表單無效，顯示錯誤訊息
                 alert("請填寫所有必填欄位！");
             }
-        });
+        };
+        //用來清空單筆新增視窗的欄位
+        function cleanInsertOneModalContent(){
+            insertOneCustomer.selectedIndex=0;
+            insertOneRecipient.value="";
+            insertOneAddress.value="";
+            insertOneRecipientCompany.value="";
+            insertOnePhoneNO.value="";
+            insertOneNote.value="";
+            insertOneItem.selectedIndex=0;
+            insertOneAmount.value="";
+        }
         // <<單筆新增彈出視窗>><<取消按鈕>>
         insertOneCancelModalButton.addEventListener('click', () => {
             insertOneModal.classList.remove('active');//關閉<<單筆新增彈出視窗>>
