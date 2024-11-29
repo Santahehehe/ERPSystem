@@ -538,6 +538,24 @@ th {
             event.preventDefault(); // 防止表單默認提交行為
             // 驗證表單是否有效(重點在用了form.checkValidity():會檢查required欄位是否有正確填寫)
             if (insertOneOrderForm.checkValidity()) {
+                //用來取得<<單筆新增彈出視窗>>中輸入的品項內容
+                // 創建一個空的 array 用來存儲品項和數量
+                const orderItems = [];
+
+                // 遍歷所有的品項和數量欄位
+                const itemSelects = document.querySelectorAll('[name="item[]"]');
+                const quantityInputs = document.querySelectorAll('[name="quantity[]"]');
+
+                for (let i = 0; i < itemSelects.length; i++) {
+                    const item = itemSelects[i].value;
+                    const amount = quantityInputs[i].value;
+
+                    // 將每個品項和數量的值存入 orderItems 陣列中
+                    if (item && amount) {  // 檢查品項和數量是否都有填寫
+                        orderItems.push({ item, amount });
+                    }
+                }
+
                 alert("表單驗證成功！提交資料...");
                 //表單通過驗證，用post方法去後端新增一筆訂單
                 fetch('http://localhost:8080/insertOrder', {
@@ -548,12 +566,12 @@ th {
                     body: JSON.stringify({
                         "barcode":"",
                         "orderNO":"",
-                        "client":"小明",
-                        "recipient":"大華",
-                        "recipientCompany":"台積電",
-                        "address":"台北市大安區安樂路147巷14樓",
-                        "phoneNO":"0974987789",
-                        "note":"要好吃",
+                        "client":insertOneCustomer.value,
+                        "recipient":insertOneRecipient.value,
+                        "recipientCompany":insertOneRecipientCompany.value,
+                        "address":insertOneAddress.value,
+                        "phoneNO":insertOnePhoneNO.value,
+                        "note":insertOneNote.value,
                         "latitude":"1.54684",
                         "longitude":"4.7896",
                         "state":0,
@@ -565,36 +583,7 @@ th {
                         "deleteDate":"",
                         "deleteStaff":"",
                         "difficultBit":0,
-                        "orderItems":[
-  	                        {
-  		                        "item":"蘋果禮盒",
-  		                        "amount":4
-	                        },
-	                        {
-  		                        "item":"香蕉禮盒",
-  		                        "amount":5
-	                        },
-                            {
-  		                        "item":"芭樂禮盒",
-  		                        "amount":31
-	                        },
-                            {
-  		                        "item":"鳳梨禮盒",
-  		                        "amount":47
-	                        },
-                            {
-  		                        "item":"西瓜禮盒",
-  		                        "amount":12
-	                        },
-                            {
-  		                        "item":"流連禮盒",
-  		                        "amount":66
-	                        },
-                            {
-  		                        "item":"藍莓禮盒",
-  		                        "amount":57
-	                        },
-                        ]
+                        "orderItems":orderItems
                     })
                 })
                 .then(response => response.json())  // 假設回應是JSON格式
@@ -631,11 +620,13 @@ th {
         }
         // <<單筆新增彈出視窗>><<取消按鈕>>
         insertOneCancelModalButton.addEventListener('click', () => {
+            cleanInsertOneModalContent();
             insertOneModal.classList.remove('active');//關閉<<單筆新增彈出視窗>>
             overlayForModal.classList.remove('active');//取消<<跳出視窗遮罩>>
         });
-        // <<單筆新增彈出視窗>><<關閉按鈕>>
+        // <<單筆新增彈出視窗>><<叉叉按鈕>>
         closeInsertOneModal.addEventListener('click', () =>{
+            cleanInsertOneModalContent();
             insertOneModal.classList.remove('active');//關閉<<單筆新增彈出視窗>>
             overlayForModal.classList.remove('active');//取消<<跳出視窗遮罩>>
         });
@@ -660,7 +651,7 @@ th {
             defaultOption.selected = true; // 預設選中
                 //把請選擇選項添加到選項中
             itemSelect.appendChild(defaultOption);
-            // 假設有三個品項選項
+            // 假設有二個品項選項
             const items = ['品項 1', '品項 2'];
             items.forEach(function(item) {
                 const option = document.createElement('option');
