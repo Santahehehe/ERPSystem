@@ -28,9 +28,9 @@ public class OrderItem {
 	//紀錄是哪筆訂單	
 	//關聯主控方(多的一方:學生記老師名字較容易)，關聯方式為ALL
 	@ManyToOne(cascade = CascadeType.ALL)
-	//跟Order的關係是要找Order物件中的order_no欄位
-	//對應到自己這個資料表(order_item)name是order_no的欄位	
-	@JoinColumn(name="order_no", referencedColumnName="orderNO")
+	//跟Order的關係是要找Order物件中的orderNO變數
+	//對應到自己這個資料表(order_item)name是order_order_no的欄位	
+	@JoinColumn(name="order_order_no", referencedColumnName="orderNO")
 	//@JsonManagedReference與@JsonBackReference為了解決物件中存在雙向引用導致的無限遞迴問題，
 	//在處理數據之間的雙向鏈接，一個用於父級角色，另一個用於子級角色。
 	//＠JsonManagedReference被序列化的數據，而@JsonBackReference標註，不會被序列化。
@@ -40,11 +40,11 @@ public class OrderItem {
 	
 	
 	//紀錄該筆訂單的品項
-	@Column(name = "order_item")
-	private String item;
+	@Column(name = "product_product_id")
+	private Integer item;
 	//紀錄該品項數量
-	@Column(name = "amount")
-	private Integer amount;
+	@Column(name = "quantity")
+	private Integer quantity;
 	
 //	//設定和取得orderNO
 //	public void setOrderNO(Integer orderNO) {

@@ -15,7 +15,7 @@ public class OrderRequest {
 	private Integer orderNO;
 	
 	//3.紀錄客戶名稱
-	private String client;
+	private Integer client;
 	
 	//4.紀錄收件人姓名
 	private String recipient;
@@ -42,28 +42,31 @@ public class OrderRequest {
 	private Integer state;
 	
 //	12.出貨日期(可為空)
-	private String shippingDate;
+	private String shippedDate;
 	
 //	13.新增日期 (不可為空)
 	private LocalDateTime insertionDate;
 	
 //	14.新增人員 (不可為空)
-	private String insertionStaff;
+	private Integer insertionStaff;
 	
 //	15.最後修改日期 (可為空)
 	private String lastReviseDate;
 	
 //	16.最後修改人員 (可為空)
-	private String lastReviseStaff;
+	private Integer lastReviseStaff;
 	
 //	 17.刪除日期 (可為空)
 	private String deleteDate;
 	
 //	18.刪除人員 (可為空)
-	private String deleteStaff;
+	private Integer deleteStaff;
 	
 //	19.難送bit(0:不難送, 1:難送)
 	private Integer difficultBit;
+	
+//  20.用哪台車出貨的
+	private Integer carId;
 	
 //	用來記訂單品項的
     private List<OrderItemRequest> orderItems;

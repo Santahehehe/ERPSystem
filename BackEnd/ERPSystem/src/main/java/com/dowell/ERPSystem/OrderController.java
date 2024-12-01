@@ -37,14 +37,15 @@ public class OrderController {
 		order.setLatitude(orderrequest.getLatitude());
 		order.setLongitude(orderrequest.getLongitude());
 		order.setState(orderrequest.getState());
-		order.setShippingDate(orderrequest.getShippingDate());
+		order.setShippedDate(orderrequest.getShippedDate());
 		order.setInsertionStaff(orderrequest.getInsertionStaff());
 		order.setDifficultBit(orderrequest.getDifficultBit());
+		order.setCarId(orderrequest.getCarId());
 				
 		for(OrderItemRequest orderItemRequest : orderrequest.getOrderItems()) {
 			OrderItem orderItem = new OrderItem();
 			orderItem.setItem(orderItemRequest.getItem());
-			orderItem.setAmount(orderItemRequest.getAmount());
+			orderItem.setQuantity(orderItemRequest.getQuantity());
 			
 			order.addItem(orderItem);
 		}

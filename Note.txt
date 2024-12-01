@@ -1,0 +1,123 @@
+<<ToDo>>
+1.Lombok導入:
+	@Data:@Data 注解包含了@Getter、@Setter、@EqualsAndHashCode和@ToString注解的功能，可以一次性生成所有這些方法。
+
+2.後端Order物件的client要變FK(用client_id代表client)
+	Item物件的Item也要變FK(用item_id代表item)
+
+----------------------------------------------
+<<前端>>
+1.
+xxx.classList.add('yyy'):在這個元素的class名稱上新增內容(從xxx ->xxx.yyy)，讓畫面中的內容變成css對應的內容。
+
+2.用css中的display:none -> display:block來實作跳出視窗功能
+	。display: none：元素會完全隱藏，不佔用任何空間。
+	。display: block 使元素成為區塊級元素，並且會自動佔據一整行，這對於結構化布局非常重要。
+	。在 HTML 和 CSS 中，默認的元素顯示屬性是 display: none，這使得元素在頁面上不可見且不佔用空間。如果想讓某個元素顯示在頁面上，我們需要將其 display 屬性設為其他值，通常是 display: block（區塊級元素）或 display: flex（彈性佈局元素），這樣該元素才會被渲染並顯示出來。
+
+3.如果沒有用到DOMNodeInserted但console卻顯示相關錯誤，可以打開無痕再開一次網頁看看，因為無痕模式通常不會啟用瀏覽器插件，如果用無痕沒有相同的錯誤就表示是插件在搞
+
+4.form.checkValidity() 是一個 HTML5 的表單方法，用來檢查表單中所有表單元素（例如 <input>、<select>、<textarea> 等）是否符合它們的有效性要求。這個方法會返回一個布林值 (true 或 false)，表示表單是否符合所有的驗證條件。
+
+5.如果你是表單，按下視窗中其他的button元素可能導致表單默認提交，所以要用
+	法1。事件監聽器那邊添加event.preventDefault(); // 防止表單默認提交行為
+	法2。設定取消button的type，確保取消按鈕不會被設定成type="submit"
+
+6.清空input欄位用.value
+------------------------------------------------
+<<Git>>
+1.用master branch進行開發，確認完成再整併回main
+------------------------------------------------
+<<後端>>
+1.訂單的輸入分成對Order和OrderItem的輸入
+
+2.用JPA對資料庫進行操作
+
+3.Java: order在SQL語法中有特殊涵意，如果表的名字叫order要加``   -> `order`
+
+4.Java: 當使用JPA替主key自動產生key時，可能會導致資料庫的not null失效，此時，要在@Entity的類別註解中加上nullable = false來檢查輸入是null的話會出現錯誤
+
+5.@Transactional: 確保一系列的資料庫操作要麼全部成功，要麼全部失敗，維護資料的一致性。
+
+<<JPA>>
+參考資料:https://ithelp.ithome.com.tw/m/articles/10326115
+1.application.properties配置檔中的spring.jpa.hibernate.ddl-auto=create表示重新啟動java程式時會清空資料庫，none則不會對資料庫做任何動作。
+2.提供@CreatedDate:
+	使用步驟:
+	。step1:在XXXApplication.java添加@EnableJpaAuditing註解
+	。step2:接著到有需要用到@CreatedDate的Entity添加@EntityListeners(AuditingEntityListener.class)並import 
+		。1.import org.springframework.data.annotation.CreatedDate;
+		。2.(AuditingEntityListenr):import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+		。3.(讓日期變local日期):import java.time.LocalDateTime;
+		。4.import jakarta.persistence.EntityListeners;
+	。step3:在要用@CreateDate的變數加上此註解
+<<Lombok>>
+1.安裝((採用eclipse內建plugin installer):
+參考資料:https://ithelp.ithome.com.tw/m/articles/10304986
+---------------------------------------------------------
+<<MySQL>>
+1.畫EER圖
+2.匯出MySQL腳本
+3.匯入腳本讓他變成資料表
+4.有什麼問題就去原本的腳本重新畫圖再匯入一次
+------------------------------------------------
+<<測資>>
+1.新增訂單
+step1.用來新增員工資料
+INSERT INTO erpsystem.staff (staff_name, account, hashPwd, salt)
+VALUES ("祐", "123456789@gmail.com", "456789", "11454678777");
+SELECT * FROM erpsystem.staff;
+
+step2.新增state
+INSERT INTO erpsystem.state (state_name, state_note)
+VALUES ("未出貨", "訂單還沒出貨");
+SELECT * FROM erpsystem.state;
+
+step3.新增product
+。品項1
+INSERT INTO erpsystem.product (name, price)
+VALUES ("蘋果禮盒", 500);
+SELECT * FROM erpsystem.product;
+。品項2
+INSERT INTO erpsystem.product (name, price)
+VALUES ("西瓜禮盒", 700);
+SELECT * FROM erpsystem.product;
+
+step4.新增client
+INSERT INTO erpsystem.client (name, contact_person, contact_way, create_date, create_staff_id, pay_bit)
+VALUES ("KFC", "芬", "Line", "2024/09/05", 1, 0);
+SELECT * FROM erpsystem.client;
+
+新增訂單測資(後端API)
+{
+  "barcode":null,
+  "orderNO":"",
+  "client":"1",
+  "recipient":"大華",
+  "recipientCompany":"台積電",
+  "address":"台北市大安區安樂路147巷14樓",
+  "phoneNO":"0974987789",
+  "note":"要好吃",
+  "latitude":"1.54684",
+  "longitude":"4.7896",
+  "state":1,
+  "shippedDate":null,
+  "insertionDate":null,
+  "insertionStaff":"1",
+  "lastReviseDate":"",
+  "lastReviseStaff":"",
+  "deleteDate":"",
+  "deleteStaff":"",
+  "difficultBit":0,
+  "carId":null,
+  "orderItems":[
+  	{
+  		"item":"1",
+  		"quantity":4
+	},
+	{
+  		"item":"2",
+  		"quantity":7
+	}
+  ]
+}

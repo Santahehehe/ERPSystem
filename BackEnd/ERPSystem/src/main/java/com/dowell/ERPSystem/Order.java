@@ -45,7 +45,7 @@ public class Order {
 		
 		@Column(name = "client",nullable = false)
 		//3.紀錄客戶名稱
-		private String client;
+		private Integer client;
 		
 		@Column(name = "recipient",nullable = false)
 		//4.紀錄收件人姓名
@@ -75,13 +75,13 @@ public class Order {
 //		10.地址經度
 		private Float longitude;
 		
-		@Column(name = "state",nullable = false)
+		@Column(name = "state_state_id",nullable = false)
 //		11.出貨狀態bit(-1:刪除  0:未出貨 1:已安排出貨 2:已出貨)
 		private Integer state;
 		
-		@Column(name = "shipping_date")
+		@Column(name = "shipped_date")
 //		12.出貨日期(可為空)
-		private String shippingDate;
+		private String shippedDate;
 		
 		//@CreatedDate是JPA提供的註解
 		@CreatedDate
@@ -89,29 +89,33 @@ public class Order {
 //		13.新增日期 (不可為空)
 		private LocalDateTime insertionDate;
 		
-		@Column(name = "insertion_staff",nullable = false)
+		@Column(name = "insertion_staff_id",nullable = false)
 //		14.新增人員 (不可為空)
-		private String insertionStaff;
+		private Integer insertionStaff;
 		
 		@Column(name = "lastrevise_date")
 //		15.最後修改日期 (可為空)
 		private String lastReviseDate;
 		
-		@Column(name = "lastrevise_staff")
+		@Column(name = "lastrevise_staff_id")
 //		16.最後修改人員 (可為空)
-		private String lastReviseStaff;
+		private Integer lastReviseStaff;
 		
 		@Column(name = "delete_date")
 //		 17.刪除日期 (可為空)
 		private String deleteDate;
 		
-		@Column(name = "delete_staff")
+		@Column(name = "delete_staff_id")
 //		18.刪除人員 (可為空)
-		private String deleteStaff;
+		private Integer deleteStaff;
 		
-		@Column(name = "difficult bit",nullable = false)
+		@Column(name = "difficult_bit",nullable = false)
 //		19.難送bit(0:不難送, 1:難送)
 		private Integer difficultBit;
+		
+		//20.用哪一台車出貨
+		@Column(name="car_id")
+		private Integer carId;
 		
 		//關聯至OrderItem		
 		@JsonManagedReference

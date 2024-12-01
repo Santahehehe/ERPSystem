@@ -6,7 +6,7 @@ import lombok.Data;
 //用來存放request的內容
 public class OrderItemRequest {
 	//紀錄該筆訂單的品項
-	private String item;
+	private Integer item;
 	//紀錄該品項數量
-	private Integer amount;
+	private Integer quantity;
 }
