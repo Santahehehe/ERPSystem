@@ -425,8 +425,8 @@ th {
                     <label>*客戶名稱：</label>
                     <select required id="insertOneCustomer">
                         <option value="" disabled selected>請選擇</option>
-                        <option value="customer1">客戶 1</option>
-                        <option value="customer2">客戶 2</option>
+                        <option value="1">客戶 1</option>
+                        <option value="2">客戶 2</option>
                     </select>
                 </div>
                 <div class="insertOneForm-group">
@@ -454,8 +454,8 @@ th {
                     <label>*品項：</label>
                     <select required name="item[]" id="insertOneItem">
                         <option value="" disabled selected>請選擇</option>
-                        <option value="item1">品項 1</option>
-                        <option value="item2">品項 2</option>
+                        <option value="1">品項 1</option>
+                        <option value="2">品項 2</option>
                     </select>
                     <label>*數量：</label>
                     <input type="number" min="1" required name="quantity[]" id="insertOneAmount">
@@ -548,11 +548,11 @@ th {
 
                 for (let i = 0; i < itemSelects.length; i++) {
                     const item = itemSelects[i].value;
-                    const amount = quantityInputs[i].value;
+                    const quantity = quantityInputs[i].value;
 
                     // 將每個品項和數量的值存入 orderItems 陣列中
-                    if (item && amount) {  // 檢查品項和數量是否都有填寫
-                        orderItems.push({ item, amount });
+                    if (item && quantity) {  // 檢查品項和數量是否都有填寫
+                        orderItems.push({ item, quantity });
                     }
                 }
 
@@ -564,24 +564,24 @@ th {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        "barcode":"",
-                        "orderNO":"",
+                        "barcode":null,
+                        "orderNO":null,
                         "client":insertOneCustomer.value,
                         "recipient":insertOneRecipient.value,
                         "recipientCompany":insertOneRecipientCompany.value,
                         "address":insertOneAddress.value,
                         "phoneNO":insertOnePhoneNO.value,
                         "note":insertOneNote.value,
-                        "latitude":"1.54684",
-                        "longitude":"4.7896",
-                        "state":0,
-                        "shippingDate":"",
+                        "latitude":1.54684,
+                        "longitude":4.7896,
+                        "state":1,
+                        "shippedDate":null,
                         "insertionDate":null,
-                        "insertionStaff":"祐",
-                        "lastReviseDate":"",
-                        "lastReviseStaff":"",
-                        "deleteDate":"",
-                        "deleteStaff":"",
+                        "insertionStaff":1,
+                        "lastReviseDate":null,
+                        "lastReviseStaff":null,
+                        "deleteDate":null,
+                        "deleteStaff":null,
                         "difficultBit":0,
                         "orderItems":orderItems
                     })
