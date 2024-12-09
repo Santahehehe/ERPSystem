@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入頁面</title>
+    <style>
+        /* 基本樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .login-container {
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .login-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .register-btn-small {
+            padding: 5px 10px;
+            background-color: #0099CC;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* 註冊彈出視窗 */
+        .modal {
+            display: none; /* 默認隱藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+        }
+
+        .close-btn, .commit-btn {
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .close-btn {
+            background-color: #f44336;
+        }
+
+        .commit-btn {
+            background-color: #4CAF50;
+        }
+
+        /*自訂通知欄*/
+        #notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <!--用來通知的欄位-->
+    <div id="notification" style="display: none;">
+        這是自訂的通知訊息
+    </div>
+
+    <!-- 登入頁面 -->
+    <div class="login-container">
+        <h2>登入</h2>
+        <form action="http://localhost:8080/login" method="POST">
+            <div class="form-group">
+                <label for="username">帳號</label>
+                <input type="text" id="username" placeholder="輸入帳號" name="username">
+            </div>
+            <div class="form-group">
+                <label for="password">密碼</label>
+                <input type="password" id="password" placeholder="輸入密碼" name="password">
+            </div>
+            <div class="button-container">
+                <button class="login-btn" id="loginBtn" type="submit">登入</button>
+                <button class="register-btn-small" id="registerBtn">註冊</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 註冊彈出視窗 -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <h3>註冊新帳號</h3>
+            <div class="form-group">
+                <label for="newUsername">帳號</label>
+                <input type="text" id="newUsername" placeholder="輸入帳號">
+            </div>
+            <div class="form-group">
+                <label for="newPassword">密碼</label>
+                <input type="password" id="newPassword" placeholder="輸入密碼">
+            </div>
+            <button class="commit-btn" id="commit">提交</button>
+            <button class="close-btn" id="closeModalBtn">關閉</button>
+        </div>
+    </div>
+
+    <script>
+        //登入頁面的登入按鈕
+        const loginBtn = document.getElementById('loginBtn');
+        //登入頁面的註冊按鈕
+        const registerBtn = document.getElementById('registerBtn');
+        //註冊互動視窗(用來顯示和隱藏註冊互動視窗)
+        const registerModal = document.getElementById('registerModal');
+        //註冊互動視窗中的關閉按鈕
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        //註冊互動視窗中的提交按鈕
+        const commitBtn = document.getElementById('commit')
+        
+
+        // 點擊登入頁面的登入按鈕 去測試登入
+        // 如果帳號密碼不對回傳false，正確回傳true
+        // loginBtn.addEventListener('submit', () => {
+        //     //從註冊互動視窗取得要發出請求的參數: 帳號&密碼
+        //     const account = document.getElementById('username').value;
+        //     const password = document.getElementById('password').value;
+        //     console.log(account);
+        //     console.log(password);
+        //     if(account!=""&&password!=""){
+        //         //對後端發出Post請求
+        //         fetch('http://localhost:8080/login', {
+        //             method: 'Post',
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             },
+        //             body: JSON.stringify({
+        //                 username:account, 
+        //                 password:password
+        //             })
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log(data);
+        //             // window.location.href = "./index.html";
+                    
+        //         })
+        //         .catch(error => {
+        //             console.error('Error', error);
+        //         });
+        //     }else{
+        //         //在自訂通知欄位跳出請輸入帳號密碼
+        //         document.getElementById('notification').innerText = "請輸入帳號密碼";
+        //         showCustomNotification();
+        //     }
+            
+        // })
+
+        // 點擊登入頁面的註冊按鈕時顯示註冊互動視窗
+        registerBtn.addEventListener('click', () => {
+            registerModal.style.display = 'flex';//顯示註冊互動視窗
+        });
+
+        // 點擊註冊互動視窗中的關閉按鈕時隱藏註冊互動視窗
+        closeModalBtn.addEventListener('click', () => {
+            registerModal.style.display = 'none';//隱藏註冊互動視窗
+        });
+
+        // 點擊註冊互動視窗的提交按鈕時對後端發中post請求
+        commitBtn.addEventListener('click', () => {
+            //從註冊互動視窗取得要發出請求的參數: 帳號&密碼
+            const account = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+            const createTime = new Date();//紀錄現在時間
+
+            console.log("帳號:"+account);
+            console.log("密碼:"+password);
+            console.log(createTime.toLocaleString());
+            if(account!=""&&password!=""){
+                //對後端發出請求
+                fetch('http://192.168.1.2:8080/register', {
+                    method: 'Post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        account:account, 
+                        md5password:password,
+                        createTime: createTime.toLocaleString()
+                    })
+                })
+                .then(reponse=> {
+                    console.log('註冊成功:',reponse);
+                    //把註冊互動視窗欄位清空
+                    document.getElementById('newUsername').value = "";
+                    document.getElementById('newPassword').value = "";
+                
+                    registerModal.style.display = 'none'; // 隱藏註冊互動視窗
+                })
+                .catch(error => {
+                    console.error('儲存資料時出錯:', error);
+                });
+
+            }else{
+                //註冊失敗
+                console.log("註冊失敗");
+                //在自訂通知欄位跳出有欄位空白
+                document.getElementById('notification').innerText = "註冊失敗，帳號或密碼空白";
+                showCustomNotification();
+            }
+            
+            
+        });
+
+        //用來顯示通知欄位
+        function showCustomNotification() {
+            const notification = document.getElementById("notification");
+            notification.style.display = "block";
+            notification.style.opacity = "1";
+
+            // 設定3秒後自動隱藏
+            setTimeout(() => {
+                notification.style.opacity = "0";
+                setTimeout(() => notification.style.display = "none", 500); // 等待過渡結束再隱藏
+            }, 3000);
+        }
+
+        
+
+
+
+        // 點擊視窗外部時隱藏彈出視窗
+        /*
+        window.addEventListener('click', (event) => {
+            if (event.target === registerModal) {
+                registerModal.style.display = 'none';
+            }
+        });
+        */
+    </script>
+
+</body>
+</html>

@@ -39,6 +39,8 @@ xxx.classList.add('yyy'):在這個元素的class名稱上新增內容(從xxx ->x
 
 5.@Transactional: 確保一系列的資料庫操作要麼全部成功，要麼全部失敗，維護資料的一致性。
 
+6.@Id的變數名稱要跟MySQL欄位相同
+---------------------------------------------------------------
 <<JPA>>
 參考資料:https://ithelp.ithome.com.tw/m/articles/10326115
 1.application.properties配置檔中的spring.jpa.hibernate.ddl-auto=create表示重新啟動java程式時會清空資料庫，none則不會對資料庫做任何動作。
@@ -51,6 +53,7 @@ xxx.classList.add('yyy'):在這個元素的class名稱上新增內容(從xxx ->x
 		。3.(讓日期變local日期):import java.time.LocalDateTime;
 		。4.import jakarta.persistence.EntityListeners;
 	。step3:在要用@CreateDate的變數加上此註解
+----------------------------------------------------------
 <<Lombok>>
 1.安裝((採用eclipse內建plugin installer):
 參考資料:https://ithelp.ithome.com.tw/m/articles/10304986
