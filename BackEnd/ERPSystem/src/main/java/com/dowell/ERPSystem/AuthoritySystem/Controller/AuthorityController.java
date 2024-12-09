@@ -28,7 +28,7 @@ public class AuthorityController {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    //用來看現在的session
+    //用來看現在的session(有權限的人都可查看)
     @GetMapping("/current")
     public String getCurrentSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 不創建新 Session
@@ -40,13 +40,13 @@ public class AuthorityController {
     }
     
     
-    //新增Staff    
+    //註冊Staff(所有人皆可註冊)    
     @PostMapping("/staff")
     public Staff createStaff(@RequestBody Staff staff) {
     	// 加密密碼
         var encodedPwd = passwordEncoder.encode(staff.getPassword());
         staff.setPassword(encodedPwd);
-    	
+    	staff.setAuthorities("USER");
         staff.setStaff_id(null);
         memberRepository.save(staff);
         return staff;
@@ -59,12 +59,13 @@ public class AuthorityController {
         return memberRepository.findAll();
     }
     
-    
+    //測試用(所有人都可查看)
     @RequestMapping("/guest")
     public String guest() {
         return "所有人都可進";
     }
 
+    //看現在是誰在用(有權限的人皆可查看)
     @RequestMapping("/getUsername")
     public String getUsername() {
     	Authentication authentication = 
@@ -82,8 +83,4 @@ public class AuthorityController {
         return "只有Admin可進";
     }
     
-    @RequestMapping(value = "/hello2")
-	public String hello() {
-		return "Hello World!!";
-	}
 }

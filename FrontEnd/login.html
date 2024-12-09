@@ -148,7 +148,7 @@
             </div>
             <div class="button-container">
                 <button class="login-btn" id="loginBtn" type="submit">登入</button>
-                <button class="register-btn-small" id="registerBtn">註冊</button>
+                <button class="register-btn-small" id="registerBtn" type="button">註冊</button>
             </div>
         </form>
     </div>
@@ -242,15 +242,14 @@
             console.log(createTime.toLocaleString());
             if(account!=""&&password!=""){
                 //對後端發出請求
-                fetch('http://192.168.1.2:8080/register', {
+                fetch('http://localhost:8080/staff', {
                     method: 'Post',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        account:account, 
-                        md5password:password,
-                        createTime: createTime.toLocaleString()
+                        username:account, 
+                        password:password,
                     })
                 })
                 .then(reponse=> {
