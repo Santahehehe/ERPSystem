@@ -24,6 +24,8 @@ xxx.classList.add('yyy'):在這個元素的class名稱上新增內容(從xxx ->x
 	法2。設定取消button的type，確保取消按鈕不會被設定成type="submit"
 
 6.清空input欄位用.value
+
+7.如果表單中的按鈕沒有指定type可能會被默認為submit
 ------------------------------------------------
 <<Git>>
 1.用master branch進行開發，確認完成再整併回main
