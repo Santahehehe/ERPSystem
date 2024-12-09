@@ -1,4 +1,4 @@
-package com.dowell.ERPSystem;
+package com.dowell.ERPSystem.AuthoritySystem.Configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

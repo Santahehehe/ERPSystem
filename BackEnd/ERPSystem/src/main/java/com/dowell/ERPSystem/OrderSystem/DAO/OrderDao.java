@@ -1,7 +1,10 @@
-package com.dowell.ERPSystem;
+package com.dowell.ERPSystem.OrderSystem.DAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.dowell.ERPSystem.OrderSystem.Object.Order;
+import com.dowell.ERPSystem.OrderSystem.Object.OrderItem;
 
 @Component
 public class OrderDao {

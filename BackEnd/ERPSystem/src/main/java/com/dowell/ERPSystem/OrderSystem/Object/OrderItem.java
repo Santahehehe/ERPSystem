@@ -1,4 +1,4 @@
-package com.dowell.ERPSystem;
+package com.dowell.ERPSystem.OrderSystem.Object;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 

@@ -1,4 +1,4 @@
-package com.dowell.ERPSystem;
+package com.dowell.ERPSystem.OrderSystem.Object;
 
 import java.time.LocalDateTime;
 import java.util.List;

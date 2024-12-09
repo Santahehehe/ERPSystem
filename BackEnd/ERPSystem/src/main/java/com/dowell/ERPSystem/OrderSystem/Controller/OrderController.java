@@ -1,9 +1,15 @@
-package com.dowell.ERPSystem;
+package com.dowell.ERPSystem.OrderSystem.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.dowell.ERPSystem.OrderSystem.Object.Order;
+import com.dowell.ERPSystem.OrderSystem.Object.OrderItem;
+import com.dowell.ERPSystem.OrderSystem.Object.OrderItemRequest;
+import com.dowell.ERPSystem.OrderSystem.Object.OrderRequest;
+import com.dowell.ERPSystem.OrderSystem.Service.OrderService;
 
 @RestController
 public class OrderController {

@@ -1,4 +1,4 @@
-package com.dowell.ERPSystem;
+package com.dowell.ERPSystem.OrderSystem.Object;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.dowell.ERPSystem;
+package com.dowell.ERPSystem.OrderSystem.Object;
 //import來使用@CreatedDate
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
