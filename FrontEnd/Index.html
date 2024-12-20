@@ -558,6 +558,7 @@ th {
 
                 alert("表單驗證成功！提交資料...");
                 //表單通過驗證，用post方法去後端新增一筆訂單
+                console.log(orderItems);
                 fetch('http://localhost:8080/insertOrder', {
                     method: 'POST',
                     headers: {
@@ -652,11 +653,12 @@ th {
                 //把請選擇選項添加到選項中
             itemSelect.appendChild(defaultOption);
             // 假設有二個品項選項
-            const items = ['品項 1', '品項 2'];
+            const items = [{name: '品項 1',value: 1},
+                           {name: '品項 2',value: 2}];
             items.forEach(function(item) {
                 const option = document.createElement('option');
-                option.value = item;
-                option.textContent = item;
+                option.value = item.value;
+                option.textContent = item.name;
                 itemSelect.appendChild(option);
             });
             //創建數量label
