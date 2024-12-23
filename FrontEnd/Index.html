@@ -298,6 +298,58 @@ th {
 }  
 /* <<單筆新增彈出視窗>>樣式 */
 
+/* <<多筆匯入彈出視窗>>樣式 */
+        .insertMany {
+            display: none; /* 預設隱藏 */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .insertMany-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .insertManyClose {
+            float: right;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .insertManyClose:hover {
+            color: red;
+        }
+
+        .insertMany button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .insertMany button:hover {
+            background-color: #0056b3;
+        }
+
+        .insertMany input[type="file"] {
+            margin: 20px 0;
+        }
+/* <<多筆匯入彈出視窗>>樣式 */
+
 
 
 /* 固定右側選單展開按鈕位置 */
@@ -334,7 +386,6 @@ th {
 .overlayForModal.active {
     display: block;
 }
-
     </style>
 </head>
 <body>
@@ -353,7 +404,7 @@ th {
     <!-- 新增按鈕區 -->
     <div class="button-row">
         <button class="btn btn-primary" id="insertOne-btn">單筆新增</button>
-        <button class="btn btn-primary">多筆匯入</button>
+        <button class="btn btn-primary" id="insertMany-btn">多筆匯入</button>
         <button class="btn btn-primary">查詢訂單</button>
         <button class="btn btn-danger"> 刪除訂單</button>
         <button class="btn btn-primary">匯出黑貓格式</button>
@@ -421,6 +472,7 @@ th {
         <div class="insertOneModal-content" id="insertOneModal-content">
             <div class="close-btn" id="closeInsertOneModal">X</div>
             <form id="insertOneOrderForm">
+                <h2>單筆新增</h2>
                 <div class="insertOneForm-group">
                     <label>*客戶名稱：</label>
                     <select required id="insertOneCustomer">
@@ -471,6 +523,19 @@ th {
             </form>
         </div>
     </div>
+
+    <!-- 多筆匯入彈出視窗 -->
+    <div id="insertManyModal" class="insertMany">
+        <div class="insertMany-content">
+            <!-- &times是叉叉符號 -->
+            <span id="closeModalBtn" class="insertManyClose">&times;</span>
+            <h2>多筆匯入</h2>
+            <a href="../CSVsample/insertManySample.csv" class="download-button" download="insertManySample.csv">csv範例</a>
+            <input type="file" id="csvFileInput" accept=".csv">
+            <button id="uploadBtn">上傳</button>
+        </div>
+    </div>
+
 
     <script>
         // 選取元素
@@ -679,6 +744,49 @@ th {
         })
 
 
+    //多筆匯入操作
+        const insertMany = document.getElementById('insertMany-btn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const insertManyModal = document.getElementById('insertManyModal');
+        // 打開模態視窗
+        insertMany.addEventListener('click', () => {
+          insertManyModal.style.display = 'flex';
+        });
+
+        // 關閉模態視窗
+        closeModalBtn.addEventListener('click', () => {
+            cleanCSVFile();
+            insertManyModal.style.display = 'none';
+        });
+
+        // 點擊模態視窗外部關閉視窗
+        window.addEventListener('click', (event) => {
+            cleanCSVFile();
+            if (event.target === insertManyModal) {
+              insertManyModal.style.display = 'none';
+            }
+        });
+
+        // 處理檔案上傳按鈕
+        const uploadBtn = document.getElementById('uploadBtn');
+        const csvFileInput = document.getElementById('csvFileInput');
+
+        uploadBtn.addEventListener('click', () => {
+            const file = csvFileInput.files[0];
+            if (file) {
+                alert(`檔案已選擇：${file.name}`);
+                // 可在這裡執行上傳處理邏輯
+                cleanCSVFile();
+                insertManyModal.style.display = 'none';//關閉視窗
+            } else {
+                alert('請選擇一個檔案！');
+            }
+        });
+
+        function cleanCSVFile(){
+            csvFileInput.value='';//清除檔案
+        }
+    //多筆匯入操作
 
         // 右側選單操作
         // 展開右側選單
