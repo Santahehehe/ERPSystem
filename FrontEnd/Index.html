@@ -773,12 +773,73 @@ th {
 
         uploadBtn.addEventListener('click', () => {
             const file = csvFileInput.files[0];
+            //如果有選擇檔案(file不為null)
             if (file) {
-                alert(`檔案已選擇：${file.name}`);
-                // 可在這裡執行上傳處理邏輯
+                // 執行上傳處理邏輯
+                // 使用FileReader讀取文件內容
+                var reader = new FileReader();
+                reader.readAsText(file,'utf-8');//用utf-8編碼來解析
+                // reader 是一個FileReader物件，用來讀取檔案內容
+                //當檔案讀取完成後，onload事件會被觸發，並執行指定的回呼函式
+                reader.onload = function(e){
+                    // e是事件物件，代表這次讀取檔案的操作結果。
+                    // e.target是觸發事件的目標物件(這裡是FileReader)
+                    // e.target.result 是讀取完的檔案內容
+                    var contents = e.target.result;
+                    // 檔案是按行拆分
+                    // lines是一個陣列，包含每一行的資料(每一行是一個index)，其中每一行的資料並沒有根據","把內容分開
+                    var lines = contents.split('\n');
+
+                    //解析csv數據
+                    //用headers陣列來記錄表頭的資訊(長度以及內容)
+                    var headers = lines[0].split(',');
+                    var data = [];
+                    //從lines[1]開始(不要表頭)
+                    for(var i=1;i<lines.length;i++){
+                        //values包含行資料根據","分割後的結果
+                        var values = lines[i].split(',');
+                        //只取到表頭(headers)長度的欄位
+                        if(values.length === headers.length){
+                            //創建名為Order_data的鍵值對
+                            var Order_data = {};
+                            //照表頭長度把資料放入Order_data鍵值對
+                            for(var j=0;j<headers.length;j++){
+                                //把表頭的值作為鍵存放，values作為值存放
+                                Order_data[headers[j]] = values[j];
+                            }
+                            //把Order_data鍵值對存放至data陣列
+                            data.push(Order_data);
+                        }
+
+                    }
+                    //把data陣列中的內容一行一行提交給後端。
+                    data.forEach(function(Order_data) {
+                        //把Order_data的值存入變數，準備傳到後端
+                        var clientNameInput = Order_data[headers[0]];
+                        console.log(clientNameInput);
+                        var receipientInput = Order_data[headers[1]];
+                        console.log(receipientInput);
+                        var addressInput = Order_data[headers[2]];
+                        console.log(addressInput);
+                        var productInput = Order_data[headers[3]];
+                        console.log(productInput);
+                        var quantityInput = Order_data[headers[4]];
+                        console.log(quantityInput);
+                        var receipientPhoneInput = Order_data[headers[5]];
+                        console.log(receipientPhoneInput);
+                        var receipientCompanyInput = Order_data[headers[6]];
+                        console.log(receipientCompanyInput);
+                        var noteInput = Order_data[headers[7]];
+                        console.log(noteInput);
+                        //TODO :呼叫後端API
+                    });
+                }
+                //提交完刪除檔案
                 cleanCSVFile();
                 insertManyModal.style.display = 'none';//關閉視窗
-            } else {
+            } 
+            //如果沒有選擇檔案
+            else {
                 alert('請選擇一個檔案！');
             }
         });
