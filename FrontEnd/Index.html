@@ -592,9 +592,7 @@ th {
                     console.log('訂單已成功新增:', data);
                     // 在訂單新增成功後關閉視窗
                     //1.刪除動態生成的欄位 2.清空視窗欄位中內容 3.關閉視窗&遮罩
-                    //1.
-                    insertOneItemsContainer.textContent="";
-                    //2.
+                    //1.2.
                     cleanInsertOneModalContent();
                     //3.
                     insertOneModal.classList.remove('active');//關閉<<單筆新增彈出視窗>>
@@ -608,8 +606,11 @@ th {
                 alert("請填寫所有必填欄位！");
             }
         };
-        //用來清空單筆新增視窗的欄位
+        //用來清空單筆新增視窗的欄位，以及動態生成的品項欄位
         function cleanInsertOneModalContent(){
+            //刪除動態生成的欄位
+            insertOneItemsContainer.textContent="";
+            //刪除填寫訂單的欄位
             insertOneCustomer.selectedIndex=0;
             insertOneRecipient.value="";
             insertOneAddress.value="";
